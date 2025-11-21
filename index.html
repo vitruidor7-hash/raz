@@ -3,28 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raz's Field Journal - Universal Sync</title>
+    <title>Raz's Field Journal - Cloud Synced</title>
     <!-- Standard Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bangers&amp;family=Fredoka:wght@400;600&amp;display=swap" rel="stylesheet">
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    screens: {
-                        'xs': '375px',
-                    },
-                    padding: {
-                        'safe': 'env(safe-area-inset-bottom)',
-                    }
-                }
-            }
-        }
-    </script>
-
     <style id="app-styles">
         :root {
             --psy-purple: #2D1E2F;
@@ -43,7 +28,6 @@
                               radial-gradient(circle at 80% 80%, rgba(169, 208, 70, 0.15) 0%, transparent 20%);
             color: white;
             overflow-x: hidden;
-            overscroll-behavior-y: none;
         }
 
         h1, h2, h3, .psy-font {
@@ -53,29 +37,27 @@
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 10px;
         }
         ::-webkit-scrollbar-track {
             background: #1a111b; 
         }
         ::-webkit-scrollbar-thumb {
             background: var(--psy-green); 
-            border-radius: 10px;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--psy-orange); 
         }
 
         .skew-card {
-            transform: perspective(1000px) rotateY(0deg);
+            transform: perspective(1000px) rotateY(2deg) rotateZ(-1deg);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @media (min-width: 768px) {
-            .skew-card {
-                transform: perspective(1000px) rotateY(2deg) rotateZ(-1deg);
-            }
-            .skew-card:hover {
-                transform: perspective(1000px) rotateY(0deg) rotateZ(0deg) scale(1.02);
-                z-index: 10;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            }
+        .skew-card:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateZ(0deg) scale(1.02);
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
         .rank-badge {
@@ -89,10 +71,9 @@
         }
 
         .glass-panel {
-            background: rgba(29, 22, 30, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .pin-card {
@@ -102,34 +83,98 @@
         .pin-card.owned {
             filter: grayscale(0%) opacity(1);
             border-color: var(--psy-yellow);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
-        .pin-card:active {
-            transform: scale(0.95);
+        .pin-card:hover {
+            transform: scale(1.05);
         }
 
+        /* Menu Styles */
+        .menu-btn {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .menu-btn:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 0 20px var(--hover-color);
+            border-color: white;
+        }
+        .menu-btn.no-wobble:hover {
+            transform: scale(1.02) rotate(0deg); 
+        }
+        .menu-bg-overlay {
+            background: radial-gradient(circle at center, transparent 0%, #2D1E2F 90%);
+        }
+
+        /* CRT Effect for Ottomatic */
         .ottomatic-screen {
             background: radial-gradient(circle, #2a2a2a 0%, #000 100%);
+            border: 8px solid #444;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
             overflow: hidden;
         }
-        @media (min-width: 768px) {
-            .ottomatic-screen {
-                border: 8px solid #444;
-                box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            }
-            .ottomatic-screen::before {
-                content: " ";
-                display: block;
-                position: absolute;
-                top: 0; left: 0; bottom: 0; right: 0;
-                background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-                z-index: 2;
-                background-size: 100% 2px, 3px 100%;
-                pointer-events: none;
-            }
+        .ottomatic-screen::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* CUSTOM RANGE SLIDER STYLING */
+        /* This makes the input look like a progress bar but remain clickable */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type=range]:focus {
+            outline: none;
         }
         
+        /* The Thumb (Handle) */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--thumb-color, #ccc);
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            margin-top: -8px; /* center it */
+        }
+        
+        /* The Track (Background) */
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+            background: #374151; /* Gray-700 */
+            border-radius: 5px;
+        }
+        
+        /* Firefox Styles */
+        input[type=range]::-moz-range-thumb {
+            height: 24px;
+            width: 24px;
+            border: 2px solid var(--thumb-color, #ccc);
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+        }
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+            background: #374151;
+            border-radius: 5px;
+        }
+
+        /* Code Block */
         .code-block {
             background: #1e1e1e;
             color: #d4d4d4;
@@ -140,42 +185,9 @@
             border: 1px solid #333;
             white-space: pre;
         }
-
-        .menu-btn {
-            transition: all 0.2s ease;
-        }
-        .menu-btn:active {
-            transform: scale(0.96);
-        }
-        @media (min-width: 768px) {
-             .menu-btn:hover {
-                transform: scale(1.05) rotate(-2deg);
-                box-shadow: 0 0 20px var(--hover-color);
-                border-color: white;
-            }
-        }
-
-        .menu-bg-overlay {
-            background: radial-gradient(circle at center, transparent 0%, #2D1E2F 90%);
-        }
-
-        .nav-item.active {
-            color: var(--psy-green);
-        }
-        .nav-item.active span {
-            font-variation-settings: 'FILL' 1;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        .animate-slide-up {
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col pb-24 md:pb-0">
+<body class="min-h-screen flex flex-col">
 
 <!-- Loading Screen -->
 <div id="loader" class="fixed inset-0 bg-[#2D1E2F] z-[100] flex flex-col items-center justify-center">
@@ -186,32 +198,47 @@
         </div>
     </div>
     <h2 class="mt-4 text-xl text-green-400 psy-font tracking-widest">Establishing Psychic Link...</h2>
-    <p class="text-sm text-gray-500" id="auth-status">Accessing Universal Mind...</p>
+    <p class="text-sm text-gray-500" id="auth-status">Authenticating...</p>
 </div>
 
-<!-- Mobile Header -->
-<header class="glass-panel sticky top-0 z-40 px-4 py-3 shadow-lg border-b border-white/10 md:border-b-4 md:border-green-500">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
+<!-- Header (Restored Original) -->
+<header class="glass-panel sticky top-0 z-50 px-4 py-3 shadow-lg border-b-4 border-green-500">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Logo Area -->
         <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('menu')">
-            <div class="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-white shadow-lg bg-green-500 flex items-center justify-center">
-                <span class="material-symbols-outlined text-2xl md:text-3xl text-white">psychology</span>
+            <div class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg bg-green-500 flex items-center justify-center hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-3xl text-white">psychology</span>
             </div>
-            <div class="hidden xs:block">
-                <h1 class="text-xl md:text-3xl text-white leading-none">Raz's Journal</h1>
-                <p class="text-[10px] md:text-sm text-green-400 font-bold tracking-wider uppercase">Universal Sync</p>
+            <div>
+                <h1 class="text-2xl md:text-3xl text-white drop-shadow-md">Raz's Field Journal</h1>
+                <p class="text-xs md:text-sm text-green-300 font-bold tracking-wider uppercase">Universal Cloud Sync</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
-             <div class="flex flex-col items-end">
-                <div class="flex items-center gap-2">
-                    <span class="text-yellow-400 font-bold text-sm md:text-lg leading-none" id="rank-title">Intern</span>
-                    <div class="bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center border border-yellow-400 relative overflow-hidden">
-                        <div class="absolute inset-0 rank-badge opacity-50"></div>
-                        <span class="relative z-10 text-white text-xs font-bold" id="current-rank">1</span>
+        <div class="flex items-center gap-4">
+            <!-- Back Button (Restored) -->
+            <button id="back-btn" onclick="switchTab('menu')" class="hidden px-4 py-2 bg-red-500 hover:bg-red-400 text-white rounded-full font-bold shadow-lg border-2 border-red-300 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="hidden sm:inline">Back to Mind</span>
+            </button>
+
+            <!-- Rank & Global Stats -->
+            <div class="flex items-center gap-4 bg-gray-900/80 rounded-full pr-6 pl-2 py-2 border border-gray-700 shadow-inner">
+                <div class="relative w-12 h-12">
+                    <div class="absolute inset-0 rounded-full rank-badge blur-sm opacity-75"></div>
+                    <div class="absolute inset-0 rounded-full bg-gray-800 flex items-center justify-center border-2 border-yellow-400 z-10">
+                        <span class="text-yellow-400 font-bold text-xl psy-font" id="current-rank">1</span>
                     </div>
                 </div>
-                <span class="text-xs text-green-400 font-bold" id="global-percent">0%</span>
+                <div class="flex flex-col items-start hidden sm:flex">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider">Current Rank</div>
+                    <div class="text-sm font-bold text-yellow-400 leading-none" id="rank-title">Intern</div>
+                </div>
+                <div class="h-8 w-px bg-gray-700 mx-2 hidden sm:block"></div>
+                <div class="flex flex-col items-end min-w-[60px]">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider">Total</div>
+                    <div class="text-xl font-bold text-green-400 leading-none psy-font" id="global-percent">0%</div>
+                </div>
             </div>
         </div>
     </div>
@@ -220,115 +247,114 @@
 <!-- Main Content -->
 <main class="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full relative">
 
-    <!-- MAIN MENU -->
-    <section id="view-menu" class="absolute inset-0 z-30 flex items-center justify-center p-4">
+    <!-- MAIN MENU (Default View) -->
+    <section id="view-menu" class="absolute inset-0 z-40 flex items-center justify-center p-4">
+        <!-- Background Image Layer -->
         <div class="absolute inset-0 z-0 overflow-hidden">
             <img src="Images/Menu_Background.png" onerror="this.style.display='none'" class="w-full h-full object-cover opacity-40 animate-pulse-slow">
+            <!-- CSS Fallback Gradient if image missing -->
             <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-gray-900 to-black -z-10"></div>
             <div class="absolute inset-0 menu-bg-overlay"></div>
         </div>
 
-        <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl w-full pb-20 md:pb-0">
-            <div class="md:hidden text-center mb-4">
-                <h2 class="text-3xl text-white psy-font">Welcome Agent</h2>
-                <p class="text-gray-300 text-sm">Select a category below to begin tracking.</p>
-            </div>
-
-            <button onclick="switchTab('mental')" class="menu-btn group relative h-32 md:h-56 rounded-3xl bg-gray-800/80 border-l-4 border-pink-500 md:border-4 hover:bg-pink-900/80 flex flex-row md:flex-col items-center md:justify-center overflow-hidden p-4 gap-4" style="--hover-color: rgba(232, 85, 85, 0.5)">
-                <span class="material-symbols-outlined text-4xl md:text-6xl text-pink-400 md:mb-2 bg-pink-900/50 p-3 rounded-full md:bg-transparent md:p-0">psychology_alt</span>
-                <div class="text-left md:text-center">
-                    <h2 class="text-2xl md:text-4xl text-white psy-font tracking-wider">Mental Worlds</h2>
-                    <p class="text-pink-300 font-bold uppercase text-xs md:tracking-widest md:text-sm">Explore The Mind</p>
-                </div>
+        <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full">
+            <!-- Mental Worlds Button -->
+            <button onclick="switchTab('mental')" class="menu-btn group relative h-40 md:h-56 rounded-3xl bg-gray-800/80 border-4 border-pink-500 hover:bg-pink-900/80 flex flex-col items-center justify-center overflow-hidden" style="--hover-color: rgba(232, 85, 85, 0.5)">
+                <div class="absolute inset-0 bg-[url('Images/Menu_Icon_Mental.png')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                <span class="material-symbols-outlined text-6xl text-pink-400 mb-2 group-hover:scale-110 transition-transform z-10 drop-shadow-lg">psychology_alt</span>
+                <h2 class="text-3xl md:text-4xl text-white psy-font tracking-wider drop-shadow-lg z-10">Mental Worlds</h2>
+                <p class="text-pink-300 font-bold uppercase tracking-widest text-sm z-10">Explore The Mind</p>
             </button>
 
-            <button onclick="switchTab('hubs')" class="menu-btn group relative h-32 md:h-56 rounded-3xl bg-gray-800/80 border-l-4 border-green-500 md:border-4 hover:bg-green-900/80 flex flex-row md:flex-col items-center md:justify-center overflow-hidden p-4 gap-4" style="--hover-color: rgba(169, 208, 70, 0.5)">
-                <span class="material-symbols-outlined text-4xl md:text-6xl text-green-400 md:mb-2 bg-green-900/50 p-3 rounded-full md:bg-transparent md:p-0">public</span>
-                <div class="text-left md:text-center">
-                    <h2 class="text-2xl md:text-4xl text-white psy-font tracking-wider">Real World</h2>
-                    <p class="text-green-300 font-bold uppercase text-xs md:tracking-widest md:text-sm">Explore The Camp</p>
-                </div>
+            <!-- Hub Worlds Button -->
+            <button onclick="switchTab('hubs')" class="menu-btn group relative h-40 md:h-56 rounded-3xl bg-gray-800/80 border-4 border-green-500 hover:bg-green-900/80 flex flex-col items-center justify-center overflow-hidden" style="--hover-color: rgba(169, 208, 70, 0.5)">
+                <div class="absolute inset-0 bg-[url('Images/Menu_Icon_Real.png')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                <span class="material-symbols-outlined text-6xl text-green-400 mb-2 group-hover:scale-110 transition-transform z-10 drop-shadow-lg">public</span>
+                <h2 class="text-3xl md:text-4xl text-white psy-font tracking-wider drop-shadow-lg z-10">Real World</h2>
+                <p class="text-green-300 font-bold uppercase tracking-widest text-sm z-10">Explore The Camp</p>
             </button>
 
-            <button onclick="switchTab('missions')" class="menu-btn group relative h-32 md:h-56 rounded-3xl bg-gray-800/80 border-l-4 border-blue-500 md:border-4 hover:bg-blue-900/80 flex flex-row md:flex-col items-center md:justify-center overflow-hidden p-4 gap-4" style="--hover-color: rgba(72, 172, 240, 0.5)">
-                <span class="material-symbols-outlined text-4xl md:text-6xl text-blue-400 md:mb-2 bg-blue-900/50 p-3 rounded-full md:bg-transparent md:p-0">assignment_late</span>
-                <div class="text-left md:text-center">
-                    <h2 class="text-2xl md:text-4xl text-white psy-font tracking-wider">Mission Log</h2>
-                    <p class="text-blue-300 font-bold uppercase text-xs md:tracking-widest md:text-sm">Scavenger Hunt</p>
-                </div>
+            <!-- Missions Button -->
+            <button onclick="switchTab('missions')" class="menu-btn group relative h-40 md:h-56 rounded-3xl bg-gray-800/80 border-4 border-blue-500 hover:bg-blue-900/80 flex flex-col items-center justify-center overflow-hidden" style="--hover-color: rgba(72, 172, 240, 0.5)">
+                <div class="absolute inset-0 bg-[url('Images/Menu_Icon_Mission.png')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                <span class="material-symbols-outlined text-6xl text-blue-400 mb-2 group-hover:scale-110 transition-transform z-10 drop-shadow-lg">assignment_late</span>
+                <h2 class="text-3xl md:text-4xl text-white psy-font tracking-wider drop-shadow-lg z-10">Mission Log</h2>
+                <p class="text-blue-300 font-bold uppercase tracking-widest text-sm z-10">Scavenger Hunt & Tasks</p>
             </button>
 
-            <button onclick="switchTab('ottomatic')" class="menu-btn group relative h-32 md:h-56 rounded-3xl bg-gray-800/80 border-l-4 border-yellow-500 md:border-4 hover:bg-yellow-900/80 flex flex-row md:flex-col items-center md:justify-center overflow-hidden p-4 gap-4" style="--hover-color: rgba(255, 215, 0, 0.5)">
-                <span class="material-symbols-outlined text-4xl md:text-6xl text-yellow-400 md:mb-2 bg-yellow-900/50 p-3 rounded-full md:bg-transparent md:p-0">shopping_cart</span>
-                <div class="text-left md:text-center">
-                    <h2 class="text-2xl md:text-4xl text-white psy-font tracking-wider">The Store</h2>
-                    <p class="text-yellow-300 font-bold uppercase text-xs md:tracking-widest md:text-sm">Buy Pins & Items</p>
-                </div>
+            <!-- Ottomatic Button -->
+            <button onclick="switchTab('ottomatic')" class="menu-btn group relative h-40 md:h-56 rounded-3xl bg-gray-800/80 border-4 border-yellow-500 hover:bg-yellow-900/80 flex flex-col items-center justify-center overflow-hidden" style="--hover-color: rgba(255, 215, 0, 0.5)">
+                <div class="absolute inset-0 bg-[url('Images/Menu_Icon_Otto.png')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                <span class="material-symbols-outlined text-6xl text-yellow-400 mb-2 group-hover:scale-110 transition-transform z-10 drop-shadow-lg">shopping_cart</span>
+                <h2 class="text-3xl md:text-4xl text-white psy-font tracking-wider drop-shadow-lg z-10">The Ottomatic</h2>
+                <p class="text-yellow-300 font-bold uppercase tracking-widest text-sm z-10">Buy Pins & Items</p>
             </button>
             
-            <button onclick="switchTab('code')" class="md:col-span-2 menu-btn group h-16 rounded-2xl bg-gray-900/50 border border-gray-600 flex items-center justify-center gap-2 text-gray-400 hover:text-white text-sm">
-                <span class="material-symbols-outlined text-lg">code</span>
-                <span>Source Code</span>
+            <!-- Code Button (Small & Non-Wobbling) -->
+            <button onclick="switchTab('code')" class="md:col-span-2 menu-btn no-wobble group h-16 rounded-2xl bg-gray-900/50 border-2 border-gray-600 hover:border-white flex items-center justify-center gap-2 text-gray-400 hover:text-white" style="--hover-color: rgba(255, 255, 255, 0.2)">
+                <span class="material-symbols-outlined">code</span>
+                <span class="font-bold">View Source Code</span>
             </button>
         </div>
     </section>
 
     <!-- View 1: Mental Worlds -->
-    <section id="view-mental" class="space-y-6 hidden animate-fade-in pb-12">
-         <h2 class="md:hidden text-2xl text-pink-300 psy-font pl-1">Mental Worlds</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" id="mental-grid">
+    <section id="view-mental" class="space-y-6 hidden animate-fade-in">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12" id="mental-grid">
             <!-- Populated by JS -->
         </div>
     </section>
 
     <!-- View 2: Hub Worlds -->
-    <section id="view-hubs" class="hidden space-y-4 md:space-y-6 animate-fade-in pb-12">
-        <div class="bg-blue-900/30 border border-blue-500/30 rounded-2xl p-4 md:p-6 text-center">
-            <h2 class="text-xl md:text-2xl text-blue-300 mb-1">Real World Exploration</h2>
-            <p class="text-sm md:text-base text-gray-400 max-w-2xl mx-auto">Collect PSI Cards, Supply Chests, and Markers.</p>
+    <section id="view-hubs" class="hidden space-y-6 animate-fade-in">
+        <div class="bg-blue-900/30 border border-blue-500/30 rounded-2xl p-6 mb-8 text-center">
+            <h2 class="text-2xl text-blue-300 mb-2">Real World Exploration</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">Explore the Motherlobe and surrounding areas. Collect all PSI Cards, Supply Chests, and Challenge Markers to hit Rank 102.</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8" id="hubs-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="hubs-grid">
              <!-- Populated by JS -->
         </div>
     </section>
 
     <!-- View 3: Mission Log -->
-    <section id="view-missions" class="hidden max-w-5xl mx-auto grid md:grid-cols-2 gap-6 md:gap-8 animate-fade-in pb-12">
+    <section id="view-missions" class="hidden max-w-5xl mx-auto grid md:grid-cols-2 gap-8 animate-fade-in">
         <!-- Scavenger Hunt -->
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-xl border border-gray-700 md:col-span-2 lg:col-span-1">
-            <div class="relative h-32 md:h-48 bg-yellow-900/20 overflow-hidden">
+            <div class="relative h-48 bg-yellow-900/20 overflow-hidden">
                 <div class="w-full h-full bg-gradient-to-br from-yellow-900 to-yellow-700 flex items-center justify-center opacity-50">
-                    <span class="material-symbols-outlined text-8xl md:text-9xl text-white/10 transform rotate-12">checklist</span>
+                    <span class="material-symbols-outlined text-9xl text-white/10 transform rotate-12">checklist</span>
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent"></div>
-                <div class="absolute bottom-3 left-4 md:bottom-4 md:left-6">
-                    <h2 class="text-2xl md:text-3xl text-yellow-400 psy-font drop-shadow-md">Scavenger Hunt</h2>
-                    <p class="text-gray-300 text-xs md:text-sm font-bold uppercase">Mission Critical</p>
+                <div class="absolute bottom-4 left-6">
+                    <h2 class="text-3xl text-yellow-400 psy-font drop-shadow-md">Scavenger Hunt</h2>
+                    <p class="text-gray-300 text-sm font-bold uppercase">Mission Critical Assets</p>
                 </div>
-                <div class="absolute top-3 right-3 md:top-4 md:right-4 bg-black/50 px-3 py-1 rounded-full text-yellow-400 font-bold text-sm" id="scavenger-progress">0/16</div>
+                <div class="absolute top-4 right-4 bg-black/50 px-3 py-1 rounded-full text-yellow-400 font-bold" id="scavenger-progress">0/16</div>
             </div>
-            <div id="scavenger-list" class="p-4 grid grid-cols-1 gap-3 max-h-none md:max-h-[600px] md:overflow-y-auto custom-scrollbar">
+            <div id="scavenger-list" class="p-4 md:p-6 grid grid-cols-1 gap-2 max-h-[600px] overflow-y-auto custom-scrollbar">
                 <!-- Populated by JS -->
             </div>
         </div>
         
         <!-- Side Quests List -->
-        <div class="md:col-span-2 lg:col-span-1 space-y-6 md:space-y-8">
+        <div class="md:col-span-2 lg:col-span-1 space-y-8">
             <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-xl border border-gray-700">
-                <div class="p-4 md:p-6 border-b border-gray-700 bg-purple-900/20">
-                    <h2 class="text-xl md:text-2xl text-purple-400 psy-font">Side Assignments</h2>
+                <div class="p-6 border-b border-gray-700 bg-purple-900/20">
+                    <h2 class="text-2xl text-purple-400 psy-font">Side Assignments</h2>
+                    <p class="text-xs text-gray-400">Required for 100% completion</p>
                 </div>
-                <div id="side-quests-list" class="p-4 md:p-6 space-y-4 md:space-y-6">
+                <div id="side-quests-list" class="p-6 space-y-6">
                     <!-- Populated by JS -->
                 </div>
             </div>
 
             <!-- Misc Tasks -->
             <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-xl border border-gray-700">
-                <div class="p-4 md:p-6 border-b border-gray-700 bg-blue-900/20">
-                    <h2 class="text-xl md:text-2xl text-blue-400 psy-font">Field Tasks</h2>
+                <div class="p-6 border-b border-gray-700 bg-blue-900/20">
+                    <h2 class="text-2xl text-blue-400 psy-font">Field Tasks</h2>
+                    <p class="text-xs text-gray-400">Mini-games &amp; Achievements</p>
                 </div>
-                <div id="misc-tasks-list" class="p-4 md:p-6 space-y-3 md:space-y-4">
+                <div id="misc-tasks-list" class="p-6 space-y-4">
                     <!-- Populated by JS -->
                 </div>
             </div>
@@ -336,119 +362,93 @@
     </section>
 
     <!-- View 4: The Ottomatic -->
-    <section id="view-ottomatic" class="hidden w-full max-w-6xl mx-auto animate-fade-in pb-12">
-        <div class="ottomatic-screen rounded-none md:rounded-3xl p-4 md:p-10 min-h-screen md:min-h-[80vh] -mx-4 md:mx-0">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b-2 border-white/10 pb-4 gap-4">
-                <div class="flex items-center gap-3 md:gap-4">
-                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-yellow-400 bg-gray-800 flex items-center justify-center overflow-hidden shrink-0">
-                         <span class="material-symbols-outlined text-3xl md:text-4xl text-yellow-400">smart_toy</span>
+    <section id="view-ottomatic" class="hidden w-full max-w-6xl mx-auto animate-fade-in">
+        <div class="ottomatic-screen rounded-3xl p-6 md:p-10 min-h-[80vh]">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b-2 border-white/10 pb-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-full border-2 border-yellow-400 bg-gray-800 flex items-center justify-center overflow-hidden">
+                         <span class="material-symbols-outlined text-4xl text-yellow-400">smart_toy</span>
                     </div>
                     <div>
-                        <h2 class="text-3xl md:text-4xl text-yellow-400 psy-font tracking-widest">OTTO-MATIC</h2>
-                        <p class="text-green-400 font-mono text-xs md:text-sm"> &gt; WELCOME AGENT.</p>
+                        <h2 class="text-4xl text-yellow-400 psy-font tracking-widest">THE OTTO-MATIC</h2>
+                        <p class="text-green-400 font-mono text-sm"> &gt; WELCOME AGENT. SPEND YOUR PSITANIUM.</p>
                     </div>
                 </div>
-                <div class="bg-black/50 px-4 py-2 md:px-6 md:py-3 rounded-lg border border-green-500/30 w-full md:w-auto text-center md:text-right">
-                    <div class="text-[10px] md:text-xs text-gray-400 font-mono uppercase">Pins Collected</div>
-                    <div class="text-2xl md:text-3xl text-white font-mono" id="pins-collected-count">0/33</div>
+                <div class="bg-black/50 px-6 py-3 rounded-lg border border-green-500/30 text-right">
+                    <div class="text-xs text-gray-400 font-mono uppercase">Pins Collected</div>
+                    <div class="text-3xl text-white font-mono" id="pins-collected-count">0/33</div>
                 </div>
             </div>
             
-            <div class="flex overflow-x-auto pb-2 mb-4 gap-2 md:flex-wrap no-scrollbar">
-                <button class="flex-shrink-0 px-4 py-2 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/50 text-xs md:text-sm font-bold whitespace-nowrap active:bg-yellow-500/40" onclick="filterPins('all')">ALL</button>
-                <button class="flex-shrink-0 px-4 py-2 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/50 text-xs md:text-sm font-bold whitespace-nowrap active:bg-purple-500/40" onclick="filterPins('Utility')">UTILITY</button>
-                <button class="flex-shrink-0 px-4 py-2 rounded-full bg-red-500/20 text-red-300 border border-red-500/50 text-xs md:text-sm font-bold whitespace-nowrap active:bg-red-500/40" onclick="filterPins('Combat')">COMBAT</button>
-                <button class="flex-shrink-0 px-4 py-2 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/50 text-xs md:text-sm font-bold whitespace-nowrap active:bg-blue-500/40" onclick="filterPins('Levitation')">LEVITATION</button>
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button class="px-4 py-1 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/50 text-sm font-bold hover:bg-yellow-500/40" onclick="filterPins('all')">ALL</button>
+                <button class="px-4 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/50 text-sm font-bold hover:bg-purple-500/40" onclick="filterPins('Utility')">UTILITY</button>
+                <button class="px-4 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/50 text-sm font-bold hover:bg-red-500/40" onclick="filterPins('Combat')">COMBAT</button>
+                <button class="px-4 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/50 text-sm font-bold hover:bg-blue-500/40" onclick="filterPins('Levitation')">LEVITATION</button>
             </div>
 
-            <div id="pins-grid" class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4 h-auto md:h-[60vh] md:overflow-y-auto custom-scrollbar pr-1 pb-24 md:pb-0">
+            <!-- Pin Grid -->
+            <div id="pins-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 h-[60vh] overflow-y-auto custom-scrollbar pr-2">
                 <!-- Populated by JS -->
             </div>
         </div>
     </section>
 
     <!-- View 5: Code Transcript -->
-    <section id="view-code" class="hidden w-full max-w-5xl mx-auto space-y-8 animate-fade-in pb-20">
+    <section id="view-code" class="hidden w-full max-w-5xl mx-auto space-y-8 animate-fade-in">
         <div class="bg-gray-900 rounded-xl border border-gray-700 p-6 shadow-2xl">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <h2 class="text-xl md:text-2xl text-blue-300 psy-font">Source Code</h2>
+                    <h2 class="text-2xl text-blue-300 psy-font">Application Source Code</h2>
+                    <p class="text-gray-400 text-sm">Copy this code to save the application as a standalone .html file.</p>
                 </div>
-                <button onclick="copyFullCode()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2">
-                    <span class="material-symbols-outlined">content_copy</span> Copy
+                <button onclick="copyFullCode()" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg font-bold shadow transition flex items-center gap-2">
+                    <span class="material-symbols-outlined">content_copy</span> Copy Full File
                 </button>
             </div>
-            <div id="code-viewer" class="code-block h-[50vh] text-xs">Loading...</div>
+            <div class="relative">
+                <div class="absolute top-0 right-0 bg-gray-800 text-xs px-2 py-1 rounded-bl-lg text-gray-500">index.html</div>
+                <div id="code-viewer" class="code-block h-[60vh] text-xs md:text-sm">
+                    <!-- Code will be injected here on view -->
+                    Loading source...
+                </div>
+            </div>
         </div>
     </section>
 
 </main>
 
-<!-- MOBILE BOTTOM NAV -->
-<nav class="fixed bottom-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-xl border-t border-white/10 pb-safe md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
-    <div class="flex justify-around items-center h-16 px-2">
-        <button onclick="switchTab('mental')" class="nav-item flex flex-col items-center justify-center w-16 h-full text-gray-400 transition-colors" id="nav-mental">
-            <span class="material-symbols-outlined text-2xl mb-0.5">psychology_alt</span>
-            <span class="text-[10px] font-bold">Mind</span>
-        </button>
-        <button onclick="switchTab('hubs')" class="nav-item flex flex-col items-center justify-center w-16 h-full text-gray-400 transition-colors" id="nav-hubs">
-            <span class="material-symbols-outlined text-2xl mb-0.5">public</span>
-            <span class="text-[10px] font-bold">World</span>
-        </button>
-        <button onclick="switchTab('menu')" class="nav-item flex flex-col items-center justify-center w-16 h-full text-gray-400 transition-colors" id="nav-menu">
-            <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-lg transform -translate-y-3 border-4 border-gray-900">
-                <span class="material-symbols-outlined text-white text-xl">home</span>
-            </div>
-        </button>
-        <button onclick="switchTab('missions')" class="nav-item flex flex-col items-center justify-center w-16 h-full text-gray-400 transition-colors" id="nav-missions">
-            <span class="material-symbols-outlined text-2xl mb-0.5">assignment</span>
-            <span class="text-[10px] font-bold">Tasks</span>
-        </button>
-        <button onclick="switchTab('ottomatic')" class="nav-item flex flex-col items-center justify-center w-16 h-full text-gray-400 transition-colors" id="nav-ottomatic">
-            <span class="material-symbols-outlined text-2xl mb-0.5">shopping_bag</span>
-            <span class="text-[10px] font-bold">Store</span>
-        </button>
-    </div>
-</nav>
-
 <!-- Detail Modal -->
-<div id="detail-modal" class="fixed inset-0 z-[60] hidden flex items-end md:items-center justify-center sm:px-4">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0" id="modal-backdrop" onclick="closeModal()"></div>
-    
-    <!-- Modal Content -->
-    <div id="modal-content" class="bg-gray-900 w-full md:max-w-4xl max-h-[85vh] md:max-h-[90vh] rounded-t-3xl md:rounded-3xl shadow-2xl border-t border-l border-r md:border-4 border-gray-700 flex flex-col relative overflow-hidden transform transition-transform translate-y-full md:translate-y-0 md:scale-95 md:opacity-0">
-        
-        <div class="md:hidden w-full flex justify-center pt-3 pb-1 absolute top-0 z-20 pointer-events-none">
-            <div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
-        </div>
-
+<div id="detail-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div id="modal-content" class="bg-gray-900 w-full max-w-4xl max-h-[90vh] rounded-3xl shadow-2xl border-4 flex flex-col relative overflow-hidden transform transition-all duration-300 scale-95 opacity-0">
         <!-- Header -->
-        <div class="relative h-32 md:h-56 w-full flex-shrink-0 overflow-hidden bg-gray-800" id="modal-header-bg">
+        <div class="relative h-40 md:h-56 w-full flex-shrink-0 overflow-hidden" id="modal-header-bg">
             <img id="modal-img" src="" class="w-full h-full object-cover opacity-60">
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
             
-            <button class="absolute top-4 right-4 bg-black/50 hover:bg-white/20 rounded-full p-2 text-white transition z-20 hidden md:block" onclick="closeModal()">
+            <button class="absolute top-4 right-4 bg-black/50 hover:bg-white/20 rounded-full p-2 text-white transition z-20" onclick="closeModal()">
                 <span class="material-symbols-outlined">close</span>
             </button>
             
-            <div class="absolute bottom-4 left-6 z-10 pr-4 w-full flex justify-between items-end">
+            <div class="absolute bottom-4 left-6 z-10 w-full pr-12 flex justify-between items-end">
                 <div>
-                    <h2 class="text-3xl md:text-5xl text-white drop-shadow-lg psy-font tracking-wide leading-none" id="modal-title">Level Name</h2>
+                    <h2 class="text-4xl md:text-5xl text-white drop-shadow-lg psy-font tracking-wide" id="modal-title">Level Name</h2>
                     <div class="flex items-center gap-3 mt-1">
-                        <p id="modal-subtitle" class="font-bold text-sm md:text-lg uppercase tracking-widest text-gray-300">Type</p>
-                        <span id="modal-percent" class="px-2 py-0.5 bg-black/50 rounded text-xs md:text-sm font-bold border border-white/20">0%</span>
+                        <p id="modal-subtitle" class="font-bold text-lg uppercase tracking-widest">Type</p>
+                        <span id="modal-percent" class="px-2 py-0.5 bg-black/50 rounded text-sm font-bold">0%</span>
                     </div>
                 </div>
-                <!-- COMPLETE BUTTON -->
-                <button onclick="maxOutLevel()" class="mr-8 md:mr-12 bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-xs md:text-sm shadow-lg border border-green-400 transition-all active:scale-95 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-base md:text-lg">done_all</span>
+                <!-- Complete Button -->
+                 <button onclick="maxOutLevel()" class="mr-6 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg border border-green-400 transition-all active:scale-95 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-lg">done_all</span>
                     COMPLETE
                 </button>
             </div>
         </div>
-        
         <!-- Body -->
-        <div id="modal-body" class="flex-grow overflow-y-auto p-4 md:p-6 custom-scrollbar bg-gray-900 pb-10 md:pb-6">
+        <div id="modal-body" class="flex-grow overflow-y-auto p-6 custom-scrollbar bg-gray-900">
             <!-- Injected -->
         </div>
     </div>
@@ -460,7 +460,6 @@
     import { getFirestore, doc, setDoc, onSnapshot, collection } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 
     // --- Data ---
-
     const mentalWorlds = [
         { id: 'loboto', name: "Loboto's Labyrinth", color: "pink", image: "Images/Loboto's_Labyrinth.png", max: { figments: 80, baggage: 5, nuggets: 2, vaults: 2, hams: 0 } },
         { id: 'classroom', name: "Hollis' Classroom", color: "green", image: "Images/Holli's_Classroom.png", max: { figments: 42, baggage: 2, nuggets: 3, vaults: 1, hams: 2 } },
@@ -552,7 +551,6 @@
         misc: []
     };
 
-    // --- Default Data Helper ---
     function getDefaults() {
         const def = { mental: {}, hubs: {}, scavenger: [], quests: {}, pins: [], misc: [] };
         mentalWorlds.forEach(l => { def.mental[l.id] = { figments: 0, baggage: 0, nuggets: 0, vaults: 0, hams: 0 }; });
@@ -561,7 +559,6 @@
         return def;
     }
 
-    // --- Firebase Integration ---
     const firebaseConfig = {
         apiKey: "AIzaSyCX2K1qLYZFkS-KamEOl3XRWPsjUCPTQOk",
         authDomain: "razz-1a47b.firebaseapp.com",
@@ -576,8 +573,6 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const appId = 'razz-1a47b';
-    
-    // Universal ID
     const UNIVERSAL_SAVE_ID = 'universal_shared_save_file';
     
     let currentUser = null;
@@ -592,11 +587,9 @@
         }
     }
 
-    // --- Persistence Logic ---
     function saveData() {
         if (!currentUser) return;
         if (saveTimeout) clearTimeout(saveTimeout);
-        
         saveTimeout = setTimeout(async () => {
             try {
                 const docRef = doc(db, 'artifacts', appId, 'users', UNIVERSAL_SAVE_ID, 'user_progress', 'progress');
@@ -607,7 +600,6 @@
         }, 1000); 
     }
 
-    // --- Initialization ---
     async function init() {
         userState = getDefaults();
         renderMentalGrid();
@@ -617,21 +609,17 @@
         
         try {
             await initAuth();
-            
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user;
                     document.getElementById('auth-status').innerText = "Syncing Universal Mind...";
-                    
                     const docRef = doc(db, 'artifacts', appId, 'users', UNIVERSAL_SAVE_ID, 'user_progress', 'progress');
-                    
                     onSnapshot(docRef, (snapshot) => {
                         if (snapshot.exists()) {
                             const cloudData = snapshot.data();
                             userState.scavenger = cloudData.scavenger || [];
                             userState.pins = cloudData.pins || [];
                             userState.misc = cloudData.misc || [];
-                            
                             if(cloudData.mental) {
                                 Object.keys(userState.mental).forEach(k => {
                                     if(cloudData.mental[k]) userState.mental[k] = cloudData.mental[k];
@@ -648,21 +636,14 @@
                                 });
                             }
                         } 
-                        
-                        // Refresh UI
                         renderMentalGrid();
                         renderHubGrid();
                         renderMissions();
                         renderPins();
                         updateGlobalStats();
                         if (currentModalData) renderModalBody(); 
-
-                        // Hide loader
                         document.getElementById('loader').style.opacity = '0';
                         setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
-                    }, (error) => {
-                        console.error("Sync error", error);
-                        document.getElementById('auth-status').innerText = "Sync Failed";
                     });
                 }
             });
@@ -670,85 +651,62 @@
             document.getElementById('auth-status').innerText = "Offline Mode";
             setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
         }
-
         switchTab('menu');
     }
 
-    // --- Logic: Global Stats & Rank ---
     function updateGlobalStats() {
         let rankPoints = 0;
         let totalCompletionVal = 0;
         let totalMaxVal = 0;
-
         mentalWorlds.forEach(l => {
             const s = userState.mental[l.id];
             const m = l.max;
             rankPoints += (s.figments / 100) + (s.nuggets) + (s.vaults) + (s.baggage * 0.2); 
-            
-            const wCurrent = s.figments + (s.baggage * 5) + (s.nuggets * 10) + (s.vaults * 10) + (s.hams * 5);
-            const wMax = m.figments + (m.baggage * 5) + (m.nuggets * 10) + (m.vaults * 10) + (m.hams * 5);
-            totalCompletionVal += wCurrent;
-            totalMaxVal += wMax;
+            totalCompletionVal += s.figments + (s.baggage * 5) + (s.nuggets * 10) + (s.vaults * 10) + (s.hams * 5);
+            totalMaxVal += m.figments + (m.baggage * 5) + (m.nuggets * 10) + (m.vaults * 10) + (m.hams * 5);
         });
-
         let totalCards = 0;
         hubWorlds.forEach(h => {
             const s = userState.hubs[h.id];
             const m = h.max;
             totalCards += s.psiCards;
             rankPoints += s.markers;
-            
-            const hCurrent = s.psiCards + (s.supplyChests * 5) + (s.markers * 10);
-            const hMax = m.psiCards + (m.supplyChests * 5) + (m.markers * 10);
-            totalCompletionVal += hCurrent;
-            totalMaxVal += hMax;
+            totalCompletionVal += s.psiCards + (s.supplyChests * 5) + (s.markers * 10);
+            totalMaxVal += m.psiCards + (m.supplyChests * 5) + (m.markers * 10);
         });
-        
         rankPoints += Math.floor(totalCards / 9);
-
         rankPoints += (userState.scavenger.length / 2);
         totalCompletionVal += userState.scavenger.length * 5;
         totalMaxVal += scavengerHuntItems.length * 5;
-
         sideQuests.forEach(q => {
-            const qVal = userState.quests[q.id];
-            rankPoints += qVal;
-            totalCompletionVal += qVal * 10;
+            rankPoints += userState.quests[q.id];
+            totalCompletionVal += userState.quests[q.id] * 10;
             totalMaxVal += q.max * 10;
         });
-        
         totalCompletionVal += userState.pins.length * 5;
         totalMaxVal += pinsData.length * 5;
         totalCompletionVal += userState.misc.length * 10;
         totalMaxVal += miscTasks.length * 10;
-
         const finalRank = Math.floor(rankPoints) + 1;
         const percent = totalMaxVal > 0 ? Math.floor((totalCompletionVal / totalMaxVal) * 100) : 0;
-
         document.getElementById('current-rank').innerText = Math.min(finalRank, 102);
         document.getElementById('global-percent').innerText = `${Math.min(percent, 100)}%`;
-        
         const titles = ["Intern", "Junior", "Agent", "Senior", "Special", "Head"];
         const tIdx = Math.min(Math.floor(finalRank / 20), titles.length - 1);
         document.getElementById('rank-title').innerText = titles[tIdx];
     }
 
-    // --- Logic: Rendering Grids ---
-    
     function renderMentalGrid() {
         const grid = document.getElementById('mental-grid');
         grid.innerHTML = mentalWorlds.map(l => createCard(l, 'mental')).join('');
     }
-
     function renderHubGrid() {
         const grid = document.getElementById('hubs-grid');
         grid.innerHTML = hubWorlds.map(l => createCard(l, 'hub')).join('');
     }
-
     function createCard(data, type) {
         const s = type === 'mental' ? userState.mental[data.id] : userState.hubs[data.id];
         const m = data.max;
-        
         let maxP = 0, currP = 0;
         if (type === 'mental') {
             maxP = m.figments + m.baggage + m.nuggets + m.vaults + m.hams;
@@ -759,81 +717,71 @@
         }
         const pct = maxP === 0 ? 100 : Math.floor((currP / maxP) * 100);
         const isDone = pct >= 100;
-
         return `
-            <div onclick="openModal('${data.id}', '${type}')" class="skew-card relative h-24 md:h-64 rounded-xl md:rounded-2xl overflow-hidden cursor-pointer shadow-lg group bg-gray-800 border ${isDone ? 'border-green-500' : 'border-gray-700'} hover:border-${data.color}-400 active:scale-95">
+            <div onclick="openModal('${data.id}', '${type}')" class="skew-card relative h-64 rounded-2xl overflow-hidden cursor-pointer shadow-xl group bg-gray-800 border-2 ${isDone ? 'border-green-500' : 'border-gray-700'} hover:border-${data.color}-400 transition-all duration-300">
                 <div class="absolute inset-0">
                     <img src="${data.image}" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" alt="${data.name}">
-                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/60 to-transparent md:bg-gradient-to-t md:from-gray-900 md:via-transparent md:to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
                 </div>
-                <div class="absolute inset-0 p-3 md:p-4 flex flex-row md:flex-col justify-between items-center md:items-stretch">
-                    <div class="flex-grow flex flex-col justify-center md:justify-end">
-                         <div class="md:mt-auto">
-                             <p class="text-[10px] font-bold uppercase text-gray-400 tracking-widest hidden md:block">${type === 'mental' ? 'Brain' : 'Location'}</p>
-                            <h3 class="text-lg md:text-2xl text-white psy-font leading-none mb-1 group-hover:text-${data.color}-400 transition-colors">${data.name}</h3>
-                            <div class="w-24 md:w-full bg-gray-700 h-1 md:h-1.5 rounded-full mt-1 md:mt-2 overflow-hidden">
-                                <div class="h-full bg-${data.color}-500" style="width: ${pct}%"></div>
-                            </div>
+                <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/90 to-transparent">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h3 class="text-xl md:text-2xl text-white psy-font leading-none mb-1 group-hover:text-${data.color}-400 transition-colors">${data.name}</h3>
+                            <p class="text-xs font-bold uppercase text-gray-400 tracking-widest">${type === 'mental' ? 'Brain' : 'Location'}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-2xl font-bold ${isDone ? 'text-green-400' : 'text-white'} psy-font">${pct}%</span>
                         </div>
                     </div>
-                    <div class="md:absolute md:bottom-4 md:right-4 flex flex-col items-end justify-center pl-4">
-                        <span class="text-xl md:text-2xl font-bold ${isDone ? 'text-green-400' : 'text-white'} psy-font">${pct}%</span>
-                        ${isDone ? '<span class="material-symbols-outlined text-green-500 md:hidden">check_circle</span>' : ''}
+                    <div class="w-full bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div class="h-full bg-${data.color}-500" style="width: ${pct}%"></div>
                     </div>
                 </div>
-                ${isDone ? '<div class="hidden md:block absolute top-3 right-3 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded transform rotate-3 shadow-lg">COMPLETE</div>' : ''}
+                ${isDone ? '<div class="absolute top-3 right-3 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded transform rotate-3 shadow-lg">COMPLETE</div>' : ''}
             </div>
         `;
     }
 
-    // --- Logic: Missions ---
-    
     function renderMissions() {
-        // Scavenger Hunt
         const scavList = document.getElementById('scavenger-list');
         scavList.innerHTML = scavengerHuntItems.map((item, idx) => {
             const checked = userState.scavenger.includes(idx);
             return `
-                <label class="flex items-center p-3 bg-gray-900/50 rounded-xl cursor-pointer hover:bg-gray-700/50 transition border border-gray-700 border-l-4 border-l-yellow-500 active:bg-gray-800">
-                    <input type="checkbox" class="mission-checkbox w-6 h-6 rounded border-gray-600 text-yellow-500 focus:ring-yellow-500 bg-gray-800" 
+                <label class="flex items-center p-3 bg-gray-900/50 rounded-lg cursor-pointer hover:bg-gray-700/50 transition border border-gray-700 border-l-4 border-l-yellow-500">
+                    <input type="checkbox" class="mission-checkbox w-5 h-5 rounded border-gray-600 text-yellow-500 focus:ring-yellow-500 bg-gray-800" 
                         ${checked ? 'checked' : ''} onchange="toggleScavenger(${idx})">
-                    <div class="ml-3 text-sm text-gray-200 font-medium select-none flex-grow">${item}</div>
+                    <div class="ml-3 text-sm text-gray-200 font-medium select-none transition-colors">${item}</div>
+                    <span class="hidden ml-auto text-green-400 material-symbols-outlined text-lg">check_circle</span>
                 </label>
             `;
         }).join('');
         document.getElementById('scavenger-progress').innerText = `${userState.scavenger.length}/${scavengerHuntItems.length}`;
-
-        // Side Quests
         const questList = document.getElementById('side-quests-list');
         questList.innerHTML = sideQuests.map(q => {
             const current = userState.quests[q.id];
             const isDone = current === q.max;
-            
             let steps = '';
             for(let i=0; i<q.max; i++) {
-                steps += `<div class="w-8 h-8 md:w-6 md:h-6 rounded-full border-2 ${i < current ? 'bg-purple-500 border-purple-500' : 'bg-transparent border-gray-600'} flex items-center justify-center transition-all cursor-pointer active:scale-95" onclick="setQuest('${q.id}', ${i+1})">
-                    ${i < current ? '<span class="material-symbols-outlined text-sm text-white">check</span>' : ''}
+                steps += `<div class="w-6 h-6 rounded-full border-2 ${i < current ? 'bg-purple-500 border-purple-500' : 'bg-transparent border-gray-600'} flex items-center justify-center transition-all cursor-pointer hover:border-white" onclick="setQuest('${q.id}', ${i+1})">
+                    ${i < current ? '<span class="material-symbols-outlined text-xs text-white">check</span>' : ''}
                 </div>`;
             }
-
             return `
-                <div class="flex flex-col md:flex-row md:items-center justify-between bg-gray-900/50 p-4 rounded-xl border border-gray-700 gap-3">
+                <div class="flex flex-col md:flex-row md:items-center justify-between bg-gray-900/50 p-4 rounded-xl border border-gray-700 gap-4">
                     <div>
-                        <h3 class="text-base md:text-lg font-bold text-white ${isDone ? 'text-green-400 line-through' : ''}">${q.name}</h3>
-                        <p class="text-xs md:text-sm text-gray-400">${q.desc}</p>
+                        <h3 class="text-lg font-bold text-white ${isDone ? 'text-green-400 line-through' : ''}">${q.name}</h3>
+                        <p class="text-sm text-gray-400">${q.desc}</p>
                     </div>
-                    <div class="flex gap-2 mt-2 md:mt-0">
+                    <div class="flex gap-2">
                         ${steps}
-                        <button class="ml-auto md:ml-2 text-xs text-red-400 p-2" onclick="setQuest('${q.id}', 0)">Reset</button>
+                        <button class="ml-2 text-xs text-red-400 hover:text-red-300 underline" onclick="setQuest('${q.id}', 0)">Reset</button>
                     </div>
                 </div>
             `;
         }).join('');
-
-        // Misc
         document.getElementById('misc-tasks-list').innerHTML = miscTasks.map(t => `
-            <label class="flex items-center p-3 bg-gray-900/50 rounded-xl cursor-pointer hover:bg-gray-700/50 transition border border-gray-700 border-l-4 border-l-blue-500 active:bg-gray-800">
-                <input type="checkbox" class="mission-checkbox w-6 h-6 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-gray-800" 
+            <label class="flex items-center p-3 bg-gray-900/50 rounded-lg cursor-pointer hover:bg-gray-700/50 transition border border-gray-700 border-l-4 border-l-blue-500">
+                <input type="checkbox" class="mission-checkbox w-5 h-5 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-gray-800" 
                     ${userState.misc.includes(t.id) ? 'checked' : ''} onchange="toggleMisc('${t.id}')">
                 <div class="ml-3 text-sm text-gray-200 font-medium select-none">
                     <div class="font-bold">${t.name}</div>
@@ -848,16 +796,17 @@
         grid.innerHTML = pinsData.map((pin, idx) => {
             const owned = userState.pins.includes(idx);
             return `
-                <div class="pin-card ${owned ? 'owned' : ''} bg-gray-800 rounded-lg border border-gray-700 p-2 flex flex-col items-center text-center cursor-pointer min-h-[120px] justify-between active:scale-95" onclick="togglePin(${idx})">
-                    <div class="w-10 h-10 md:w-16 md:h-16 rounded-full bg-gray-900 mb-1 flex items-center justify-center overflow-hidden border border-gray-600 relative shrink-0">
+                <div class="pin-card ${owned ? 'owned' : ''} bg-gray-800 rounded-xl border-2 border-gray-700 p-3 flex flex-col items-center text-center cursor-pointer h-full" onclick="togglePin(${idx})">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-900 mb-2 flex items-center justify-center overflow-hidden border border-gray-600 relative">
                         <div class="absolute inset-0 bg-${getPinColor(pin.type)}-500/20"></div>
-                        <span class="material-symbols-outlined text-xl md:text-3xl text-${getPinColor(pin.type)}-400">${getPinIcon(pin.type)}</span>
+                        <span class="material-symbols-outlined text-2xl md:text-3xl text-${getPinColor(pin.type)}-400">${getPinIcon(pin.type)}</span>
                     </div>
-                    <h4 class="text-[10px] md:text-sm font-bold text-white leading-tight line-clamp-2">${pin.name}</h4>
+                    <h4 class="text-xs md:text-sm font-bold text-white leading-tight mb-1">${pin.name}</h4>
+                    <p class="text-[10px] text-gray-400 mb-2">${pin.type}</p>
                     ${owned ? 
-                        '<span class="text-green-400 text-[8px] md:text-xs font-bold">OWNED</span>' : 
-                        `<div class="text-[8px] md:text-[10px] text-yellow-500 bg-black/40 px-1 py-0.5 rounded border border-yellow-500/30">
-                            ${pin.cost}
+                        '<span class="mt-auto text-green-400 text-xs font-bold">OWNED</span>' : 
+                        `<div class="mt-auto text-[10px] text-yellow-500 bg-black/40 px-2 py-1 rounded border border-yellow-500/30">
+                            ${pin.cost} <span class="text-[8px]">PSI</span> | R${pin.rank}
                          </div>`
                     }
                 </div>
@@ -877,7 +826,6 @@
         return 'psychology';
     }
 
-    // --- Expose Functions ---
     window.filterPins = (type) => {
         const cards = document.getElementById('pins-grid').children;
         pinsData.forEach((pin, idx) => {
@@ -888,49 +836,27 @@
             }
         });
     };
-
     window.togglePin = (idx) => {
-        if(userState.pins.includes(idx)) {
-            userState.pins = userState.pins.filter(i => i !== idx);
-        } else {
-            userState.pins.push(idx);
-        }
-        renderPins();
-        updateGlobalStats();
-        saveData();
+        if(userState.pins.includes(idx)) userState.pins = userState.pins.filter(i => i !== idx);
+        else userState.pins.push(idx);
+        renderPins(); updateGlobalStats(); saveData();
     };
-
     window.toggleScavenger = (idx) => {
-        if(userState.scavenger.includes(idx)) {
-            userState.scavenger = userState.scavenger.filter(i => i !== idx);
-        } else {
-            userState.scavenger.push(idx);
-        }
-        renderMissions();
-        updateGlobalStats();
-        saveData();
+        if(userState.scavenger.includes(idx)) userState.scavenger = userState.scavenger.filter(i => i !== idx);
+        else userState.scavenger.push(idx);
+        renderMissions(); updateGlobalStats(); saveData();
     };
-
     window.toggleMisc = (id) => {
         if(userState.misc.includes(id)) userState.misc = userState.misc.filter(i => i !== id);
         else userState.misc.push(id);
-        renderMissions(); updateGlobalStats();
-        saveData();
+        renderMissions(); updateGlobalStats(); saveData();
     };
-
     window.setQuest = (id, val) => {
         const cur = userState.quests[id];
-        if (val === cur) {
-            userState.quests[id] = val - 1; 
-        } else {
-            userState.quests[id] = val;
-        }
-        renderMissions();
-        updateGlobalStats();
-        saveData();
+        if (val === cur) userState.quests[id] = val - 1; 
+        else userState.quests[id] = val;
+        renderMissions(); updateGlobalStats(); saveData();
     };
-
-    // --- Logic: Modals ---
 
     let currentModalData = null;
     let currentModalType = null;
@@ -942,22 +868,15 @@
         
         const modal = document.getElementById('detail-modal');
         const content = document.getElementById('modal-content');
-        const backdrop = document.getElementById('modal-backdrop');
-        
         modal.classList.remove('hidden');
-        
-        // Trigger animations (Bottom sheet slide for mobile, Fade/Scale for desktop)
-        requestAnimationFrame(() => {
-            backdrop.classList.remove('opacity-0');
-            content.classList.remove('translate-y-full', 'md:scale-95', 'md:opacity-0');
-            content.classList.add('translate-y-0', 'md:scale-100', 'md:opacity-100');
-        });
+        setTimeout(() => {
+            content.classList.remove('opacity-0', 'scale-95');
+            content.classList.add('opacity-100', 'scale-100');
+        }, 10);
         
         document.getElementById('modal-title').innerText = data.name;
         document.getElementById('modal-subtitle').innerText = type === 'mental' ? 'Mental World' : 'Hub Location';
         document.getElementById('modal-img').src = data.image;
-        
-        // Apply border color
         content.style.borderColor = `var(--psy-${data.color})`;
 
         renderModalBody();
@@ -968,7 +887,6 @@
         const id = currentModalData.id;
         const m = currentModalData.max;
         const s = currentModalType === 'mental' ? userState.mental[id] : userState.hubs[id];
-
         let maxP = 0, currP = 0;
         if (currentModalType === 'mental') {
             maxP = m.figments + m.baggage + m.nuggets + m.vaults + m.hams;
@@ -986,9 +904,7 @@
         const m = currentModalData.max;
         const s = currentModalType === 'mental' ? userState.mental[id] : userState.hubs[id];
         const container = document.getElementById('modal-body');
-
         let contentHtml = '';
-
         if (currentModalType === 'mental') {
             contentHtml += createTrackerRow('Figments', 'gesture', 'pink', s.figments, m.figments, 'figments', true);
             contentHtml += createTrackerRow('Emotional Baggage', 'shopping_bag', 'blue', s.baggage, m.baggage, 'baggage');
@@ -1000,36 +916,34 @@
             contentHtml += createTrackerRow('Supply Chests', 'inventory_2', 'orange', s.supplyChests, m.supplyChests, 'supplyChests');
             contentHtml += createTrackerRow('PSI Challenge Markers', 'share_location', 'red', s.markers, m.markers, 'markers');
         }
-
-        container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">${contentHtml}</div>`;
-        
+        container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">${contentHtml}</div>`;
         updateModalPercent();
     }
 
     function createTrackerRow(title, icon, color, current, max, key, isSlider = false) {
         if (max === 0) return ''; 
-        
         let controls = '';
         if (isSlider) {
-            // Slider Logic: Using <input type="range">
+            // Custom styled slider that mimics the original bar look
             controls = `
-                <div class="flex items-center gap-3 md:gap-4 bg-gray-800 rounded-lg p-2 mt-2">
-                    <button onclick="updateVal('${key}', -1)" class="w-10 h-10 md:w-10 md:h-10 rounded bg-gray-700 hover:bg-gray-600 text-white font-bold shadow active:scale-95">-</button>
-                    
-                    <div class="flex-grow relative h-6 flex items-center">
+                <div class="flex items-center gap-3 bg-gray-800 rounded-lg p-2 mt-2">
+                    <button onclick="updateVal('${key}', -1)" class="w-8 h-8 rounded bg-gray-700 hover:bg-gray-600 text-white font-bold shadow">-</button>
+                    <div class="flex-grow relative h-5">
                         <input type="range" min="0" max="${max}" value="${current}" 
-                               oninput="handleSliderInput('${key}', this.value)"
-                               class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-${color}-500">
+                               oninput="handleSliderInput('${key}', this.value, '${color}')"
+                               class="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer">
+                        <div class="absolute inset-0 bg-gray-700 rounded-full overflow-hidden pointer-events-none">
+                            <div id="bar-${key}" class="h-full bg-${color}-500 transition-all duration-75 ease-out" style="width: ${(current/max)*100}%"></div>
+                        </div>
                     </div>
-                    
-                    <button onclick="updateVal('${key}', 1)" class="w-10 h-10 md:w-10 md:h-10 rounded bg-gray-700 hover:bg-gray-600 text-white font-bold shadow active:scale-95">+</button>
+                    <button onclick="updateVal('${key}', 1)" class="w-8 h-8 rounded bg-gray-700 hover:bg-gray-600 text-white font-bold shadow">+</button>
                 </div>
             `;
         } else {
             let checks = '';
             for(let i=0; i<max; i++) {
                 const isActive = i < current;
-                checks += `<button onclick="setVal('${key}', ${isActive && i === current-1 ? i : i+1})" class="w-10 h-10 rounded-full border-2 ${isActive ? `bg-${color}-500 border-${color}-400 text-black` : 'bg-gray-800 border-gray-600 text-gray-600'} flex items-center justify-center transition-all active:scale-90">
+                checks += `<button onclick="setVal('${key}', ${isActive && i === current-1 ? i : i+1})" class="w-10 h-10 rounded-full border-2 ${isActive ? `bg-${color}-500 border-${color}-400 text-black` : 'bg-gray-800 border-gray-600 text-gray-600'} flex items-center justify-center transition-all hover:scale-110">
                     <span class="material-symbols-outlined text-lg">${icon}</span>
                 </button>`;
             }
@@ -1037,66 +951,57 @@
         }
 
         return `
-            <div class="bg-gray-800/50 border border-gray-700 rounded-xl p-3 md:p-4 hover:border-${color}-500 transition-colors">
+            <div class="bg-gray-800/50 border border-gray-700 rounded-xl p-4 hover:border-${color}-500 transition-colors">
                 <div class="flex justify-between items-center mb-1">
                     <div class="flex items-center gap-2 text-${color}-400">
                         <span class="material-symbols-outlined text-xl">${icon}</span>
-                        <span class="font-bold text-sm md:text-lg">${title}</span>
+                        <span class="font-bold text-lg">${title}</span>
                     </div>
-                    <div class="text-xl md:text-2xl psy-font text-white" id="tracker-num-${key}">${current}/${max}</div>
+                    <div class="text-2xl psy-font text-white" id="tracker-num-${key}">${current}/${max}</div>
                 </div>
                 ${controls}
             </div>
         `;
     }
 
-    // NEW: Max Out Function
-    window.maxOutLevel = () => {
-        if (!currentModalData) return;
-        
-        const id = currentModalData.id;
-        const m = currentModalData.max;
-        const s = currentModalType === 'mental' ? userState.mental[id] : userState.hubs[id];
-
-        // Set everything to max
-        Object.keys(m).forEach(key => {
-            s[key] = m[key];
-        });
-
-        renderModalBody();
-        updateGlobalStats();
-        saveData();
-        if(currentModalType === 'mental') renderMentalGrid(); else renderHubGrid();
-    };
-
-    // NEW: Optimized slider handler (No full re-render to keep drag smooth)
-    window.handleSliderInput = (key, valStr) => {
+    window.handleSliderInput = (key, valStr, color) => {
         const val = parseInt(valStr);
         if (!currentModalData) return;
-        
         const id = currentModalData.id;
         const s = currentModalType === 'mental' ? userState.mental[id] : userState.hubs[id];
+        s[key] = val; 
         
-        s[key] = val; // Update State
-        
-        // Update specific DOM element only
+        // Update DOM immediately for responsiveness
         const el = document.getElementById(`tracker-num-${key}`);
         if(el) el.innerText = `${val}/${currentModalData.max[key]}`;
+        
+        const bar = document.getElementById(`bar-${key}`);
+        if(bar) bar.style.width = `${(val / currentModalData.max[key]) * 100}%`;
         
         updateModalPercent();
         updateGlobalStats();
         saveData();
     };
 
+    window.maxOutLevel = () => {
+        if (!currentModalData) return;
+        const id = currentModalData.id;
+        const m = currentModalData.max;
+        const s = currentModalType === 'mental' ? userState.mental[id] : userState.hubs[id];
+        Object.keys(m).forEach(key => s[key] = m[key]);
+        renderModalBody();
+        updateGlobalStats();
+        saveData();
+        if(currentModalType === 'mental') renderMentalGrid(); else renderHubGrid();
+    };
+
     window.updateVal = (key, delta) => {
         const id = currentModalData.id;
         const s = currentModalType === 'mental' ? userState.mental[id] : userState.hubs[id];
         const max = currentModalData.max[key];
-        
         let newVal = s[key] + delta;
         if (newVal < 0) newVal = 0;
         if (newVal > max) newVal = max;
-        
         s[key] = newVal;
         renderModalBody(); 
         updateGlobalStats(); 
@@ -1116,47 +1021,29 @@
 
     window.closeModal = () => {
         const content = document.getElementById('modal-content');
-        const backdrop = document.getElementById('modal-backdrop');
-        
-        // Reverse animations
-        backdrop.classList.add('opacity-0');
-        content.classList.remove('translate-y-0', 'md:scale-100', 'md:opacity-100');
-        content.classList.add('translate-y-full', 'md:scale-95', 'md:opacity-0');
-
+        content.classList.remove('opacity-100', 'scale-100');
+        content.classList.add('opacity-0', 'scale-95');
         setTimeout(() => {
             document.getElementById('detail-modal').classList.add('hidden');
             currentModalData = null;
         }, 300);
     };
 
-    // --- Tab Switching ---
     window.switchTab = (tab) => {
-        // Hide all views
         ['mental', 'hubs', 'missions', 'ottomatic', 'code', 'menu'].forEach(t => {
             const el = document.getElementById(`view-${t}`);
             if (el) el.classList.add('hidden');
-            
-            // Nav icon update
-            const navItem = document.getElementById(`nav-${t}`);
-            if(navItem) {
-                navItem.classList.remove('text-green-400', 'active');
-                navItem.classList.add('text-gray-400');
-            }
         });
         
-        // Show target view
         const activeView = document.getElementById(`view-${tab}`);
         if (activeView) activeView.classList.remove('hidden');
-        
-        // Update Nav active state
-        const activeNav = document.getElementById(`nav-${tab}`);
-        if(activeNav) {
-            activeNav.classList.remove('text-gray-400');
-            activeNav.classList.add('text-green-400', 'active');
+
+        const backBtn = document.getElementById('back-btn');
+        if (tab === 'menu') {
+            backBtn.classList.add('hidden');
+        } else {
+            backBtn.classList.remove('hidden');
         }
-        
-        // Scroll to top
-        window.scrollTo(0,0);
 
         if (tab === 'code') renderCode();
     };
