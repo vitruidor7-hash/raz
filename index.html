@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raz's Field Journal - Cloud Synced</title>
+    <title>Raz's Field Journal - Universal Sync</title>
     <!-- Standard Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts and Icons -->
@@ -155,7 +155,7 @@
         </div>
     </div>
     <h2 class="mt-4 text-xl text-green-400 psy-font tracking-widest">Establishing Psychic Link...</h2>
-    <p class="text-sm text-gray-500" id="auth-status">Authenticating...</p>
+    <p class="text-sm text-gray-500" id="auth-status">Accessing Universal Mind...</p>
 </div>
 
 <!-- Header -->
@@ -167,7 +167,7 @@
             </div>
             <div>
                 <h1 class="text-2xl md:text-3xl text-white drop-shadow-md">Raz's Field Journal</h1>
-                <p class="text-xs md:text-sm text-green-300 font-bold tracking-wider uppercase">Cloud Synced</p>
+                <p class="text-xs md:text-sm text-green-300 font-bold tracking-wider uppercase">Universal Cloud Sync</p>
             </div>
         </div>
 
@@ -510,7 +510,6 @@
     }
 
     // --- Firebase Integration ---
-    // REPLACED with specific config from user
     const firebaseConfig = {
         apiKey: "AIzaSyCX2K1qLYZFkS-KamEOl3XRWPsjUCPTQOk",
         authDomain: "razz-1a47b.firebaseapp.com",
@@ -524,14 +523,19 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    // Use project ID as identifier for consistency
     const appId = 'razz-1a47b';
+    
+    // CRITICAL: This is the shared ID for ALL devices. 
+    // Anyone with this code sees the same data.
+    const UNIVERSAL_SAVE_ID = 'universal_shared_save_file';
     
     let currentUser = null;
     let saveTimeout = null;
 
     async function initAuth() {
-        document.getElementById('auth-status').innerText = "Authenticating...";
+        document.getElementById('auth-status').innerText = "Connecting to Universal Mind...";
+        // We still authenticate anonymously to establish the connection,
+        // but we ignore the unique UID generated.
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
             await signInWithCustomToken(auth, __initial_auth_token);
         } else {
@@ -548,13 +552,14 @@
         
         saveTimeout = setTimeout(async () => {
             try {
-                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'user_progress', 'progress');
+                // SAVING TO THE UNIVERSAL ID, NOT THE USER ID
+                const docRef = doc(db, 'artifacts', appId, 'users', UNIVERSAL_SAVE_ID, 'user_progress', 'progress');
                 await setDoc(docRef, userState, { merge: true });
-                console.log("Saved to cloud");
+                console.log("Universal Save Complete");
             } catch (e) {
                 console.error("Save failed", e);
             }
-        }, 1000); // Wait 1 second after last change
+        }, 1000); 
     }
 
     // --- Initialization ---
@@ -573,21 +578,19 @@
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user;
-                    document.getElementById('auth-status').innerText = "Syncing Mind...";
+                    document.getElementById('auth-status').innerText = "Syncing Universal Mind...";
                     
-                    // Listen for data
-                    const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'user_progress', 'progress');
+                    // LISTENING TO THE UNIVERSAL ID
+                    const docRef = doc(db, 'artifacts', appId, 'users', UNIVERSAL_SAVE_ID, 'user_progress', 'progress');
+                    
                     onSnapshot(docRef, (snapshot) => {
                         if (snapshot.exists()) {
-                            // Merge incoming data with defaults to ensure structure
                             const cloudData = snapshot.data();
-                            // Deep merge is safer, but for this structure, careful spread works if structure hasn't changed
-                            // We'll carefully merge nested objects
+                            // Merge Data
                             userState.scavenger = cloudData.scavenger || [];
                             userState.pins = cloudData.pins || [];
                             userState.misc = cloudData.misc || [];
                             
-                            // Merge world dicts
                             if(cloudData.mental) {
                                 Object.keys(userState.mental).forEach(k => {
                                     if(cloudData.mental[k]) userState.mental[k] = cloudData.mental[k];
@@ -611,14 +614,14 @@
                         renderMissions();
                         renderPins();
                         updateGlobalStats();
-                        if (currentModalData) renderModalBody(); // Live update modal if open
+                        if (currentModalData) renderModalBody(); 
 
                         // Hide loader
                         document.getElementById('loader').style.opacity = '0';
                         setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
                     }, (error) => {
                         console.error("Sync error", error);
-                        document.getElementById('auth-status').innerText = "Sync Failed (Check Console)";
+                        document.getElementById('auth-status').innerText = "Sync Failed (Check Rules)";
                     });
                 }
             });
